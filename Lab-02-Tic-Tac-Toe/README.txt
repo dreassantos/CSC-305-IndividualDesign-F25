@@ -1,0 +1,1 @@
+Partner Turned in work: William Stuart Portugal
