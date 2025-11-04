@@ -1,31 +1,30 @@
-package org.example;
+package asalaz41;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.awt.event.*;
 
-public class SearchPanel extends JPanel implements ActionListener {
+public class SearchPanel extends JPanel implements ActionListener{
+
+    private final String SEARCH_PLACEHOLDER = "GitHub Folder URL";
+    private JTextField textField;
+    private String TEXT_URL = "https://github.com/CSC3100/Pacman";
     public SearchPanel(){
-        setBackground(Color.CYAN);
-
-        JTextField field = new JTextField("GitHub Folder URL");
-        field.setForeground(Color.GRAY);
-        field.setPreferredSize(new Dimension(600,50));
+        textField = new JTextField(TEXT_URL);
+        textField.setForeground(Color.GRAY);
+        textField.setPreferredSize(new Dimension(640,25));
 
         JButton button = new JButton("OK");
-
         button.addActionListener(this);
-        add(field);
+
+        add(textField);
         add(button);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("OK")){
-            System.out.println("OK Clicked");
+            FileUtility.getInstance().processURL(textField.getText());
         }
     }
 }
