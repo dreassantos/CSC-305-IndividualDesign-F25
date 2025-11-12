@@ -1,16 +1,16 @@
 package asalaz41;
 
-import java.awt.*;
-
 /***
- * GameLogic
+ * GameLogic helps the blackboard by using a thread to calculate
+ * the neighbors on the bord then set the states depending on the
+ * rules outlined by https://playgameoflife.com/
  *
  * @author Andrea Salazar Santos, asalaz41
  * @version 1
  */
 public class GameLogic implements Runnable {
     private int[][] neighbors;
-
+    int gridSize;
     @Override
     public void run() {
         try {
@@ -24,23 +24,23 @@ public class GameLogic implements Runnable {
     }
 
     public void nextIterationStep(){
-        System.out.println("Next Iteration Step");
-        checkNeighborsAllCells();
-        setNextState();
+        gridSize = BlackBoard.DEFAULT_GRID_SIZE;
+        processAllCells();
         BlackBoard.getInstance().cellsUpdated();
         BlackBoard.getInstance().commitState();
     }
 
-    private void checkNeighborsAllCells(){
-        neighbors = new int[BlackBoard.DEFAULT_GRID_SIZE][BlackBoard.DEFAULT_GRID_SIZE];
-        for(int i = 0; i < BlackBoard.DEFAULT_GRID_SIZE; i++){
-            for(int j = 0; j < BlackBoard.DEFAULT_GRID_SIZE; j++){
-                neighbors[i][j] = checkNeighbors(i,j);
+    private void processAllCells(){
+        neighbors = new int[gridSize][gridSize];
+        for(int row = 0; row < gridSize; row++){
+            for(int col = 0; col < gridSize; col++){
+                neighbors[row][col] = calculateNeighbors(row,col);
+                setNextState(row,col);
             }
         }
     }
-    private int checkNeighbors(int curRow, int curCol) {
-        int gridSize = BlackBoard.DEFAULT_GRID_SIZE;
+
+    private int calculateNeighbors(int curRow, int curCol) {
         int neighborCount = 0;
 
         for(int rowOffset = -1; rowOffset <= 1; rowOffset++){
@@ -48,12 +48,14 @@ public class GameLogic implements Runnable {
                 if(rowOffset == 0 && colOffset == 0){
                     continue;
                 }
+
                 int neighborRow = curRow + rowOffset;
                 int neighborCol = curCol + colOffset;
                 if(neighborRow < 0 || neighborRow >= gridSize
                         || neighborCol < 0 || neighborCol >= gridSize){
                     continue;
                 }
+
                 int neighborIndex = neighborRow * gridSize + neighborCol;
                 boolean alive = BlackBoard.getInstance().isCellAlive(neighborIndex);
                 if(alive){
@@ -61,25 +63,19 @@ public class GameLogic implements Runnable {
                 }
             }
         }
-        int index = curRow * gridSize + curCol;
-        BlackBoard.getInstance().updateCellNeighbors(index, neighborCount);
         return neighborCount;
     }
 
-    private void setNextState(){
-        int gridsize = BlackBoard.DEFAULT_GRID_SIZE;
-        for(int row = 0; row < gridsize; row++){
-            for(int col = 0; col < gridsize; col++){
-                int index = row * gridsize + col;
-                boolean alive = BlackBoard.getInstance().isCellAlive(index);
-                if(alive && (neighbors[row][col] == 2 || neighbors[row][col] == 3)){
-                    BlackBoard.getInstance().updateNextAliveState(index, true);
-                }else if(!alive && (neighbors[row][col] == 3)){
-                    BlackBoard.getInstance().updateNextAliveState(index, true);
-                }else{
-                    BlackBoard.getInstance().updateNextAliveState(index, false);
-                }
-            }
+    private void setNextState(int row, int col){
+        int index = row * gridSize + col;
+        boolean alive = BlackBoard.getInstance().isCellAlive(index);
+
+        if(alive && (neighbors[row][col] == 2 || neighbors[row][col] == 3)){
+            BlackBoard.getInstance().updateNextAliveState(index, true);
+        }else if(!alive && (neighbors[row][col] == 3)){
+            BlackBoard.getInstance().updateNextAliveState(index, true);
+        }else {
+            BlackBoard.getInstance().updateNextAliveState(index, false);
         }
     }
 }

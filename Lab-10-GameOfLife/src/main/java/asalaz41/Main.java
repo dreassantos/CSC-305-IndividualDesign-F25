@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 /***
- * Main creates a frame with a title panel and a start button.
- * The startbutton is controlled by the GameController.
+ * Main creates a frame with a title panel and a toolbar with buttons.
+ * The buttons are controlled by the GameController.
  *
  * @author Andrea Salazar Santos, asalaz41
  * @version 1
@@ -28,47 +28,16 @@ public class Main extends JFrame {
         BorderLayout layout = new BorderLayout();
         setLayout(layout);
 
-
         JPanel namePanel = buildTitleBar();
         JPanel gameBoardPanel = new GameBoard();
 
         GameController gameController = new GameController();
-        JPanel toolPanel = new JPanel();
-        GridLayout gridLayout = new GridLayout(1, 4);
-        toolPanel.setLayout(gridLayout);
-        JButton startButton = new JButton("Start");
-        JButton clearButton = new JButton("Clear");
-        JButton nextButton = new JButton("Next");
-        JButton stopButton = new JButton("Stop");
-        toolPanel.add(startButton);
-        toolPanel.add(clearButton);
-        toolPanel.add(nextButton);
-        toolPanel.add(stopButton);
-
-        startButton.addActionListener(gameController);
-        clearButton.addActionListener(gameController);
-        nextButton.addActionListener(gameController);
-        stopButton.addActionListener(gameController);
+        JPanel toolPanel = buildToolBar(gameController);
         gameBoardPanel.addMouseListener(gameController);
 
         add(namePanel, BorderLayout.NORTH);
         add(gameBoardPanel, BorderLayout.CENTER);
         add(toolPanel, BorderLayout.SOUTH);
-    }
-
-    private void testFonts(){
-        System.out.println("To Know the available font family names");
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-
-        System.out.println("Getting the font family names");
-
-        // Array of all the fonts available in AWT
-        String fonts[] = ge.getAvailableFontFamilyNames();
-
-        // Getting the font family names
-        for (String i : fonts) {
-            System.out.println(i + " ");
-        }
     }
 
     private JPanel buildTitleBar(){
@@ -86,5 +55,27 @@ public class Main extends JFrame {
 
         namePanel.add(nameLabel);
         return namePanel;
+    }
+    private JPanel buildToolBar(GameController gameController) {
+        JPanel toolPanel = new JPanel();
+        GridLayout gridLayout = new GridLayout(1, 4);
+        toolPanel.setLayout(gridLayout);
+
+        JButton startButton = new JButton("Start");
+        JButton clearButton = new JButton("Clear");
+        JButton nextButton = new JButton("Next");
+        JButton stopButton = new JButton("Stop");
+
+        toolPanel.add(startButton);
+        toolPanel.add(clearButton);
+        toolPanel.add(nextButton);
+        toolPanel.add(stopButton);
+
+        startButton.addActionListener(gameController);
+        clearButton.addActionListener(gameController);
+        nextButton.addActionListener(gameController);
+        stopButton.addActionListener(gameController);
+
+        return toolPanel;
     }
 }

@@ -1,6 +1,6 @@
 package asalaz41;
 /***
- * Cell
+ * Cell is the data structure that holds the cells states
  *
  * @author Andrea Salazar Santos, asalaz41
  * @version 1
@@ -8,7 +8,7 @@ package asalaz41;
 public class Cell {
     private boolean aliveFlag;
     private boolean nextAliveState;
-    int neighbors = 0;
+
     public Cell(boolean aliveFlag) {
         this.aliveFlag = aliveFlag;
     }
@@ -17,22 +17,15 @@ public class Cell {
         return aliveFlag;
     }
 
-    public void commitNextState(){
-        this.aliveFlag = this.nextAliveState;
-    }
-
-    public void setNeighbors(int neighbors){
-        this.neighbors = neighbors;
-    }
-
-    public int getNeighbors() {
-        return neighbors;
-    }
-
     public void setNextAliveState(boolean state) {
         this.nextAliveState = state;
     }
+
     public void setAliveState(boolean state) {
         this.aliveFlag = state;
+    }
+
+    public void commitNextState(){
+        this.aliveFlag = this.nextAliveState;
     }
 }

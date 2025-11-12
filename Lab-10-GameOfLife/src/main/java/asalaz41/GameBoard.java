@@ -5,10 +5,11 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.List;
 
 /***
- * GameBoard
+ * GameBoard Draws the grid and cells.
+ * Listens for any cell changes in the BlackBoard and redraws.
+ * Uses the GridSize constant in Blackboard to dynamically create the grid.
  *
  * @author Andrea Salazar Santos, asalaz41
  * @version 1
@@ -40,7 +41,6 @@ public class GameBoard extends JPanel implements PropertyChangeListener {
             g.fillRect(x, y, cellWidth-cellPadding, cellHeight-cellPadding);
             g.setColor(Color.BLACK);
             g.drawRect(x, y, cellWidth-cellPadding, cellHeight-cellPadding);
-            g.drawString(""+BlackBoard.getInstance().getCellNeighbors(i), x+(cellWidth/2),y+(cellHeight/2));
         }
     }
 
@@ -59,7 +59,7 @@ public class GameBoard extends JPanel implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if(evt.getPropertyName().equals(BlackBoard.PROPERTY)){
+        if(evt.getPropertyName().equals(BlackBoard.CELLS_UPDATED_PROP)){
             repaint();
         }
     }

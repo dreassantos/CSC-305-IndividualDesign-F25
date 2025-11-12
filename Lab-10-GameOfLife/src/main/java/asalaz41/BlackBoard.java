@@ -5,22 +5,25 @@ import java.beans.PropertyChangeSupport;
 import java.util.Vector;
 
 /***
- * BlackBoard
+ * BlackBoard holds Cell data for the Gameboard to observe,
+ * and uses the GameLogic in a thread to process any game state and logic changes.
  *
  * @author Andrea Salazar Santos, asalaz41
  * @version 1
  */
 public class BlackBoard extends PropertyChangeSupport {
-    public static final String PROPERTY = "BlackBoard";
-    public static final int DEFAULT_GRID_SIZE = 10;
-    public static final int DEFAULT_CELL_COUNT = DEFAULT_GRID_SIZE*DEFAULT_GRID_SIZE;
     private static BlackBoard instance;
 
-    private boolean running = false;
+    public static final String CELLS_UPDATED_PROP = "CellsUpdated";
+    public static final int DEFAULT_GRID_SIZE = 10;
+    public static final int DEFAULT_CELL_COUNT = DEFAULT_GRID_SIZE*DEFAULT_GRID_SIZE;
+
+    private boolean runningFlag = false;
     private boolean nextFlag = false;
+    private boolean startFlag = true;
 
     private Vector<Cell> cells;
-    boolean startFlag = false;
+
     private BlackBoard() {
         super(new Object());
         defaultCells();
@@ -50,22 +53,28 @@ public class BlackBoard extends PropertyChangeSupport {
                 || col < 0 || col >= DEFAULT_GRID_SIZE){
             return;
         }
-        cells.get(index).setAliveState(true);
-        firePropertyChange(PROPERTY, null, cells);
+        Cell selectedCell = cells.get(index);
+        if(selectedCell.isAlive()){
+            selectedCell.setAliveState(false);
+        }else{
+            selectedCell.setAliveState(true);
+        }
+        cellsUpdated();
     }
 
     public void cellsUpdated(){
-        firePropertyChange(PROPERTY, null, cells);
+        firePropertyChange(CELLS_UPDATED_PROP, null, cells);
     }
 
     public void start() {
         GameLogic gameLogic = new GameLogic();
-        if (startFlag == false) {
-            startFlag = true;
+        if (startFlag) {
+            startFlag = false;
             Thread thread = new Thread(gameLogic);
             thread.start();
         }
         if(nextFlag){
+            nextFlag = false;
             gameLogic.nextIterationStep();
         }
     }
@@ -73,27 +82,24 @@ public class BlackBoard extends PropertyChangeSupport {
     public void clear() {
         cells.clear();
         defaultCells();
-        firePropertyChange(PROPERTY, null, cells);
+        cellsUpdated();
     }
 
     public void setRunning(){
-        System.out.println("running set to true");
-        running = true;
+        runningFlag = true;
     }
 
     public boolean isRunning(){
-        return running;
+        return runningFlag;
     }
 
     public void setNext(){
-        System.out.println("next set to true");
          nextFlag = true;
     }
 
     public void setStop() {
-        System.out.println("stop set to true");
-        running = false;
-        startFlag = false;
+        runningFlag = false;
+        startFlag = true;
     }
 
     public void commitState(){
@@ -108,13 +114,5 @@ public class BlackBoard extends PropertyChangeSupport {
 
     public boolean isCellAlive(int index){
         return cells.get(index).isAlive();
-    }
-
-    public void updateCellNeighbors(int index, int neighborCount) {
-        cells.get(index).setNeighbors(neighborCount);
-    }
-
-    public int getCellNeighbors(int index) {
-        return cells.get(index).getNeighbors();
     }
 }

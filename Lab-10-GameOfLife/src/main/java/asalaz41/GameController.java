@@ -7,36 +7,35 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 /***
- * GameController
+ * GameController listens to mouse and actions by the buttons
+ * created in the Main class.
  *
  * @author Andrea Salazar Santos, asalaz41
  * @version 1
  */
 public class GameController implements MouseListener, ActionListener {
 
-
-    public GameController() {
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        if(command.equals("Start")) {
-            System.out.println("Starting Game");
-            BlackBoard.getInstance().setRunning();
-            BlackBoard.getInstance().start();
-        }
-
-        if(command.equals("Next")) {
-            BlackBoard.getInstance().setNext();
-            BlackBoard.getInstance().start();
-        }
-        if(command.equals("Stop")) {
-            BlackBoard.getInstance().setStop();
-        }
-        if(command.equals("Clear")) {
-            System.out.println("Cleared Game");
-            BlackBoard.getInstance().clear();
+        System.out.println("StateSelected: "+ command);
+        switch (command) {
+            case "Start":
+                BlackBoard.getInstance().setRunning();
+                BlackBoard.getInstance().start();
+                break;
+            case "Next":
+                BlackBoard.getInstance().setNext();
+                BlackBoard.getInstance().start();
+                break;
+            case "Stop":
+                BlackBoard.getInstance().setStop();
+                break;
+            case "Clear":
+                BlackBoard.getInstance().clear();
+                break;
+            default:
+                break;
         }
     }
 
