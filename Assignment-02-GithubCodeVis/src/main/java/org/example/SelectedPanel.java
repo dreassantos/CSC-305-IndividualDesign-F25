@@ -4,7 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-
+/**
+ * SelectedPanel creates a styled panel and listens to the FileUtiltiy to update the
+ * text field when a file has been selected.
+ *
+ * @author asalaz41, Andrea Salazar Santos
+ * @version 1
+ */
 public class SelectedPanel extends JPanel implements PropertyChangeListener {
     private JTextField textField;
     private String DEFAULT_TEXT = " No file selected";

@@ -1,7 +1,14 @@
 package asalaz41;
 import javiergs.tulip.GitHubHandler;
 import java.util.ArrayList;
-
+/**
+ * GithubUtility pulls the content of each file from a public GitHub url.
+ * This utility is used by the FileUtility. This is being used as a singleton
+ * to not recreate the githubhandler.
+ *
+ * @author asalaz41, Andrea Salazar Santos
+ * @version 1
+ */
 
 public class GithubUtility {
     private static GithubUtility instance;

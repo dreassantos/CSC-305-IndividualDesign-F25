@@ -7,9 +7,16 @@ import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+/**
+ * DrawPanel listens to the FileUtiltiy for changes and redraws when the data changes.
+ * A Grid is drawn with rectangles representing the files size and complexity.
+ *
+ * @author asalaz41, Andrea Salazar Santos
+ * @version 1
+ */
 public class DrawPanel extends JPanel implements PropertyChangeListener, MouseListener {
-    private int GRID_COL_DEFAULT = 9;
-    private int GRID_ROW_DEFAULT = 6;
+    private final int GRID_COL_DEFAULT = 9;
+    private final int GRID_ROW_DEFAULT = 6;
     private Rectangle[] cells;
     private Color[] cellColors;
 

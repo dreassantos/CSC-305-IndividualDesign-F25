@@ -4,7 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+/**
+ * MenuBar creates a menuBar with submenus
+ *
+ * @author asalaz41, Andrea Salazar Santos
+ * @version 1
+ */
 public class MenuBar extends JMenuBar implements ActionListener {
     public MenuBar() {
         buildFileMenu();
