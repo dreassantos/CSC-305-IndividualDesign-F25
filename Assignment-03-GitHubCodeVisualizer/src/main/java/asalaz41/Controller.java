@@ -1,15 +1,24 @@
 package asalaz41;
 
-import javax.swing.*;
+import javax.swing.JTextField;
+import javax.swing.JTree;
 import javax.swing.tree.TreePath;
-import java.awt.*;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+/**
+ * Controller handles and processes all user input for the application.
+ * Manages the user interaction, on clicks alerts the blackboard to make updates.
+ *
+ * @author Andrea Santos, asalaz41
+ * @version 2
+ */
 public class Controller implements ActionListener, MouseListener {
     private JTextField urlTextField;
+    private String currentURL;
     private JTree root;
 
     public void setTextArea(JTextField urlTextField){
@@ -28,6 +37,7 @@ public class Controller implements ActionListener, MouseListener {
 
         if (e.getActionCommand().equals("OK")){
             String url = urlTextField.getText().trim();
+
             if(!url.isEmpty()) {
                 BlackBoard.getInstance().updateStatus(BlackBoard.FILE_LOADING_PROP);
                 BlackBoard.getInstance().processURL(urlTextField.getText());
@@ -37,7 +47,6 @@ public class Controller implements ActionListener, MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        //System.out.println("Mouse Clicked " + e.getSource());
         Object source = e.getSource();
         Point point = e.getPoint();
 
@@ -45,7 +54,6 @@ public class Controller implements ActionListener, MouseListener {
             int index = ((GridPanel) source).cellAt(point);
             BlackBoard.getInstance().fileSelected(index);
         }
-
 
         if(source instanceof JTree) {
             JTree tree = (JTree) source;

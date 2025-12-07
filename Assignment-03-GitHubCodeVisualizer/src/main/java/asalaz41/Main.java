@@ -1,23 +1,33 @@
 package asalaz41;
 
-import javax.swing.*;
-import java.awt.*;
-
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ *Main creates the applications frame with a
+ * search panel, draw panel, file panel and status panel.
+ *
+ * @author asalaz41, Andrea Salazar Santos
+ * @version 1
+ */
 public class Main extends JFrame {
     private Logger logger;
+
     public static void main(String[] args){
         JFrame frame = new Main();
         frame.setSize(1200,800);
-        frame.setResizable(false);
+        frame.setResizable(true);
         frame.setTitle("Assignment 03");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
 
     public Main(){
+        logger = LoggerFactory.getLogger(Main.class);
+        logger.info("Starting Program");
 
         BorderLayout layout = new BorderLayout();
         setLayout(layout);

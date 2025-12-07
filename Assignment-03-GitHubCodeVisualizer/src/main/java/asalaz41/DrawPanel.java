@@ -1,8 +1,16 @@
 package asalaz41;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import java.awt.GridLayout;
 
+/**
+ * DrawPanel is the main panel where contents are drawn.
+ * It creates and adds tabbed panes.
+ *
+ * @author Andrea Santos, asalaz41
+ * @version 1
+ */
 public class DrawPanel extends JPanel {
 
     DrawPanel(Controller controller){

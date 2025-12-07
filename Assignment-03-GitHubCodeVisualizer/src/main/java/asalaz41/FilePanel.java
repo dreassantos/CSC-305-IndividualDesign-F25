@@ -1,18 +1,26 @@
 package asalaz41;
 
-import com.sun.source.tree.Tree;
-
-import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import javax.swing.JTree;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-import java.awt.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * FilePanel creates a panel with a scroll panel that displays a filetree.
+ * it uses a Controller to manage the user input.
+ *
+ * @author asalaz41, Andrea Salazar Santos
+ * @version 1
+ */
 public class FilePanel extends JPanel implements PropertyChangeListener {
     private JScrollPane scrollPane;
     private Controller controller;
@@ -51,7 +59,7 @@ public class FilePanel extends JPanel implements PropertyChangeListener {
                     continue;
                 }
 
-                if(currentPathSB.length()>0){
+                if(!currentPathSB.isEmpty()){
                     currentPathSB.append("/");
                 }
                 currentPathSB.append(part);
@@ -75,7 +83,6 @@ public class FilePanel extends JPanel implements PropertyChangeListener {
         expandTree(tree, new TreePath(root));
         tree.setRootVisible(false);
         scrollPane.setViewportView(tree);
-
     }
 
     private void expandTree(JTree tree, TreePath parent){
@@ -86,40 +93,19 @@ public class FilePanel extends JPanel implements PropertyChangeListener {
             TreePath path = parent.pathByAddingChild(child);
             expandTree(tree, path);
         }
+
         tree.expandPath(parent);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if(evt.getPropertyName().equals(BlackBoard.FILE_READY_PROP)){
-            System.out.println("FilePanel: File is ready ");
-            updateFilePanel((ArrayList<FileStat>) BlackBoard.getInstance().getAllFileStats());}
-    }
-
-
-
-
-
-
-
-
-
-
-    private void buildTree(){
-        ArrayList<String> nums = new ArrayList<>();
-        nums.add("1");
-        nums.add("2");
-        nums.add("3");
-        nums.add("4");
-
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
-        for (String num : nums) {
-            DefaultMutableTreeNode folder = new DefaultMutableTreeNode("folder" + num);
-            root.add(folder);
+        switch (evt.getPropertyName()) {
+            case BlackBoard.FILE_READY_PROP:
+                updateFilePanel((ArrayList<FileStat>) BlackBoard.getInstance().getAllFileStats());
+                break;
+            case BlackBoard.FILE_LOADING_PROP:
+                scrollPane.setViewportView(null);
+            default:
         }
-
-        JTree tree = new JTree(root);
-        scrollPane.setViewportView(tree);
     }
-
 }

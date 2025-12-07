@@ -1,10 +1,21 @@
 package asalaz41;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import java.awt.Rectangle;
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.Graphics;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+/**
+ * GridPanel creates a grid of rectangles for each file int a selected folder
+ * and colors each rectangle based on their FileStat data.
+ * This class listens to the Blackboard for all file stat changes.
+ *
+ * @author asalaz41, Andrea Salazar Santos
+ * @version 1
+ */
 public class GridPanel extends JPanel implements PropertyChangeListener {
     private Rectangle[] cells;
     private Color[] cellColors;
@@ -44,17 +55,6 @@ public class GridPanel extends JPanel implements PropertyChangeListener {
         }
     }
 
-    public void paintComponent(Graphics g){
-        super.paintComponent(g);
-        if(readyDrawGrid){
-            paintCells(g);
-        }else if(loading){
-            paintMsg(g,"Loading");
-        }else{
-            paintMsg(g, "");
-        }
-    }
-
     private void paintCells(Graphics g){
         if(cells == null){
             return;
@@ -73,7 +73,7 @@ public class GridPanel extends JPanel implements PropertyChangeListener {
                 g.setColor(cellColors[curCell++]);
                 g.fillRect(cell.x, cell.y, cell.width, cell.height);
                 g.setColor(Color.black);
-                g.drawString(fileStats.get(index).getName(),cell.x+cell.width/4, cell.y+cell.height/2);
+                g.drawString(fileStats.get(index).getFileName(),cell.x+cell.width/4, cell.y+cell.height/2);
             }else{
                 g.setColor(Color.lightGray);
                 g.drawRect(cell.x, cell.y, cell.width, cell.height);
@@ -120,11 +120,38 @@ public class GridPanel extends JPanel implements PropertyChangeListener {
         return new Color(baseColor.getRed(),baseColor.getGreen(), baseColor.getBlue(),alpha);
     }
 
+    public int cellAt(Point point) {
+        int cell = -1;
+        if(cellColors == null){
+            return cell;
+        }
+
+        int xPos = point.x;
+        int yPos = point.y;
+
+        for(int i = 0; i<cellColors.length; i++){
+            if(cells[i].contains(xPos,yPos)){
+                cell = i;
+            }
+        }
+
+        return cell;
+    }
+
+    @Override
+    public void paintComponent(Graphics g){
+        super.paintComponent(g);
+        if(readyDrawGrid){
+            paintCells(g);
+        }else if(loading){
+            paintMsg(g,"Loading");
+        }else{
+            paintMsg(g, "");
+        }
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        //TODO: should I use the newProperty value or statically use the value?
-        //fileStats = BlackBoard.getInstance().getAllFileStats();
-
         switch(evt.getPropertyName()){
             case BlackBoard.FILE_READY_PROP:
                 loading = false;
@@ -149,22 +176,4 @@ public class GridPanel extends JPanel implements PropertyChangeListener {
         repaint();
     }
 
-    public int cellAt(Point point) {
-        int cell = -1;
-        if(cellColors == null){
-            return cell;
-        }
-
-        int xPos = point.x;
-        int yPos = point.y;
-
-        System.out.println("Mouse Clicked");
-
-        for(int i = 0; i<cellColors.length; i++){
-            if(cells[i].contains(xPos,yPos)){
-                cell = i;
-            }
-        }
-        return cell;
-    }
 }

@@ -1,26 +1,26 @@
 package asalaz41;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.Color;
+import java.awt.Dimension;
 
 /**
  * SearchPanel creates a panel with a textfield
- * that accepts a url and passes it to the FileUtility.
+ * that accepts a url and passes it to the BlackBoard.
  *
  * @author asalaz41, Andrea Salazar Santos
  * @version 2
  */
 public class SearchPanel extends JPanel{
     private final String SEARCH_PLACEHOLDER = "GitHub Folder URL";
-    private final String TEST_URL = "https://github.com/CSC3100/Pacman";
-    private final String TEST_URL2= "https://github.com/CSC3100/App-Paint";
     private JTextField textField;
 
     public SearchPanel(Controller controller){
         setBackground(new Color(109, 150, 201));
-        textField = new JTextField(TEST_URL);
+
+        textField = new JTextField(SEARCH_PLACEHOLDER);
         textField.setForeground(Color.GRAY);
         textField.setPreferredSize(new Dimension(640,25));
 

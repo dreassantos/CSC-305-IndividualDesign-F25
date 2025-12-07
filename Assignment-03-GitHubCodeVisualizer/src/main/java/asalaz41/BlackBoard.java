@@ -1,29 +1,37 @@
 package asalaz41;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.beans.PropertyChangeSupport;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
- * FileUtility is an observable blackboard that uses a GithubUtility to
- * pull files from public repos and stores the data in the FileStat objects.
+ * Blackboard manages the fileStats resource alerting listeners
+ * whenever files are changed.
+ *
  * @author Andrea Santos, asalaz41
- * @version 1
+ * @version 2
  */
 public class BlackBoard extends PropertyChangeSupport {
     private static BlackBoard instance;
-    public static final String FILE_LOG_PROP = "logFile";
+
+    public static final String FILE_LOG_PROP = "logStatus";
     public static final String FILE_READY_PROP = "cellUpdate";
     public static final String FILE_LOADING_PROP = "loading";
-    public static final String FILE_SELECTED_PROP = "selected";
-    public static final String FILE_NODE_SELECTED_PROP = "fileNodeSelected";
+    public static final String FILE_NODE_SELECTED_PROP = "nodeSelected";
 
     private List<FileStat> fStats;
     private List<FileStat> selectedFileStats;
+    private Logger logger;
 
     private BlackBoard(){
         super(new Object());
         fStats = new ArrayList<>();
         selectedFileStats = new ArrayList<>();
+        logger = LoggerFactory.getLogger(BlackBoard.class);
     }
 
     public static BlackBoard getInstance(){
@@ -34,11 +42,11 @@ public class BlackBoard extends PropertyChangeSupport {
     }
 
     public void statusLog(String msg){
-        System.out.println(msg);
         firePropertyChange(FILE_LOG_PROP, null, msg);
     }
 
     public void processURL(String url) {
+        statusLog("Processing URL: " + url);
         GithubUtil ghUtil = new GithubUtil(url);
         FileDelegate fd = new FileDelegate(ghUtil);
         Thread thread = new Thread(fd);
@@ -51,8 +59,8 @@ public class BlackBoard extends PropertyChangeSupport {
         }
         FileStat stat = selectedFileStats.get(currentCell);
 
-        statusLog("File Cell Selected: "+ selectedFileStats.get(currentCell).toString());
-        firePropertyChange(FILE_SELECTED_PROP, null, stat);
+        logger.info("File Cell Selected: "+ stat);
+        statusLog("File Cell Selected: "+ stat);
     }
 
     public void clear() {
@@ -65,9 +73,9 @@ public class BlackBoard extends PropertyChangeSupport {
     }
 
     public void updateStatus(String status) {
-        System.out.println("Updating status as: "+ status);
         switch (status){
             case FILE_READY_PROP:
+                statusLog("Files Analyzed");
                 firePropertyChange(FILE_READY_PROP, null, status);
                 break;
             case FILE_LOADING_PROP:
@@ -88,9 +96,10 @@ public class BlackBoard extends PropertyChangeSupport {
 
     public void FolderSelected(String path) {
         selectedFileStats.clear();
+
         String fileParentPath;
         for(FileStat fileStat : fStats){
-            fileParentPath = fileStat.getURL().replace("/"+fileStat.getName(),"");
+            fileParentPath = fileStat.getURL().replace("/"+fileStat.getFileName(),"");
             if(path.equals(fileParentPath)){
                 selectedFileStats.add(fileStat);
             }
@@ -100,6 +109,25 @@ public class BlackBoard extends PropertyChangeSupport {
             firePropertyChange(FILE_READY_PROP, null, true);
         }else{
             firePropertyChange(FILE_NODE_SELECTED_PROP, null, selectedFileStats);
+        }
+    }
+
+    public void addFileMetrics(Map<String,int[]> metrics) {
+        for(FileStat fileStat : fStats){
+            String path = fileStat.getURL();
+            logger.info("Adding file metrics for " + path);
+
+            if(metrics.containsKey(path)){
+                int[] metric = metrics.get(path);
+                int abstractMetric = metric[0];
+                int inCount = metric[1];
+                int outCount = metric[2];
+                double instabilityMetric = 0.0;
+                if(inCount+outCount != 0){
+                    instabilityMetric = (double) outCount / (inCount + outCount);
+                }
+                fileStat.setMetric(abstractMetric, instabilityMetric);
+            }
         }
     }
 }

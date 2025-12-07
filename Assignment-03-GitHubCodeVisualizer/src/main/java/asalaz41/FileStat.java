@@ -2,10 +2,10 @@ package asalaz41;
 
 /**
  * FileStat contains the information on each file.
- * Data used in FileUtility and by FileUtility obervers.
+ * Data used in BlackBoard and by Blackboard obervers.
  *
  * @author asalaz41, Andrea Salazar Santos
- * @version 2
+ * @version 3
  */
 public class FileStat {
     private String url;
@@ -13,11 +13,16 @@ public class FileStat {
     private int complexity;
     private int totalSize;
 
+    private int abstractMetric;
+    private double instabilityMetric;
+
     public FileStat(String url, int size, int totalSize, int complexity){
         this.url = url;
         this.size = size;
         this.complexity = complexity;
         this.totalSize = totalSize;
+        this.abstractMetric = 0;
+        this.instabilityMetric = 0;
     }
 
     public int getSize() {
@@ -36,13 +41,30 @@ public class FileStat {
         return url;
     }
 
-    public String getName(){
+    public String getFileName(){
         return url.substring(url.lastIndexOf("/")+1);
+    }
+
+    public String getClasName(){
+        return url.substring(url.lastIndexOf('/') + 1).replace(".java", "");
+    }
+
+    public int getAbstractMetric() {
+        return abstractMetric;
+    }
+
+    public double getInstabilityMetric() {
+        return instabilityMetric;
+    }
+
+    public void setMetric(int abstractMetric, double instabilityMetric){
+        this.abstractMetric = abstractMetric;
+        this.instabilityMetric = instabilityMetric;
     }
 
     @Override
     public String toString(){
         return url + "\t[Size:" + size + ", TotalSize:" + totalSize +", Complexity:"+ complexity + "]" ;
-
     }
 }
+
