@@ -1,0 +1,11 @@
+# Github Code Visualizer - Final
+This program shows the complexity, metrics, and relationship diagram of files in a public repo.
+
+## Usage
+    -Add the url to a public repo into the search field.
+    -The status bar will update when a valid url is used.
+
+## Install
+    -Download the project
+    -Update resource: To use the tulip library you will need to add a github token in the resources of your project named config.properties.
+
